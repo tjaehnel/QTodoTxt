@@ -106,7 +106,11 @@ class MainController(QtCore.QObject):
     
     def _onTodoFeaturesChanged(self):
         self._initTodoFeatures()
-        self.revert()
+        try:
+            self.openFileByName(self._file.filename)
+        except ErrorLoadingFile as ex:
+            self._dialogs_service.showError(str(ex))
+
 
     def _initFilterText(self):
         self._view.tasks_view.filter_tasks.filterTextChanged.connect(
@@ -314,11 +318,16 @@ class MainController(QtCore.QObject):
         self._onFilterSelectionChanged(self._filters_tree_controller._view.getSelectedFilters())
 
     def toggleSupportMultilineTasks(self):
-        if self._settings.getSupportMultilineTasks():
-            self._settings.setSupportMultilineTasks(False)
+        if self._is_modified:
+            self._dialogs_service.showError('Please save your changes before changing from or to multiline mode.')
         else:
-            self._settings.setSupportMultilineTasks(True)
-        self._onTodoFeaturesChanged()
+            if self._settings.getSupportMultilineTasks():
+                self._settings.setSupportMultilineTasks(False)
+            else:
+                self._settings.setSupportMultilineTasks(True)
+            self._onTodoFeaturesChanged()
+        self._menu_controller.changeSupportMultilineTasksState(self._settings.getSupportMultilineTasks())
+
 
     def toggleVisible(self):
         if self._view.isMinimized():

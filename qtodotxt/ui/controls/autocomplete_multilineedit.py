@@ -2,7 +2,7 @@ from PySide import QtCore, QtGui
 
 
 class AutoCompleteMultilineEdit(QtGui.QPlainTextEdit):
-    def __init__(self, model, separator=' '):
+    def __init__(self, model, separator=' \n'):
         super(AutoCompleteMultilineEdit, self).__init__()
         self._separator = separator
         self._completer = QtGui.QCompleter(model)
@@ -51,7 +51,7 @@ class AutoCompleteMultilineEdit(QtGui.QPlainTextEdit):
         text = self.toPlainText()
         textUnderCursor = ''
         i = self.textCursor().position() - 1
-        while i >= 0 and text[i] != self._separator:
+        while i >= 0 and text[i] not in self._separator:
             textUnderCursor = text[i] + textUnderCursor
             i -= 1
         return textUnderCursor

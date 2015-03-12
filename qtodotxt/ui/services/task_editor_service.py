@@ -54,7 +54,7 @@ class TaskEditorService(object):
         dialog.setWindowTitle(title)
         dialog.setLabelText('Task:')
         
-        self._restoreMultilineDialogDimensions(dialog)
+        #self._restoreMultilineDialogDimensions(dialog)
 
         if task:
             dialog.setTextValue(task.text)
@@ -62,7 +62,7 @@ class TaskEditorService(object):
         
         dlgReturn = dialog.exec_()
         
-        self._saveMultilineDialogDimensions(dialog)
+        #self._saveMultilineDialogDimensions(dialog)
         
         if dlgReturn:
             return dialog.textValue(), True

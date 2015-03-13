@@ -9,11 +9,9 @@ class AutoCompleteMultilineEdit(QtGui.QPlainTextEdit):
         self._completer = QtGui.QCompleter(model)
         self._completer.setWidget(self)
         self._completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
-        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        #self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         fm = QFontMetrics(self.font())
-        textHeight = fm.height() + 5
-        self.setFixedHeight(textHeight)
         self.heightMin = 5
         self.heightMax = 20
         self.document().contentsChanged.connect(self.sizeChange)
@@ -97,7 +95,7 @@ class AutoCompleteMultilineEdit(QtGui.QPlainTextEdit):
             docHeight = self.heightMin
         newFixedHeight = textHeight*docHeight + 10
         if newFixedHeight > self.height() and docHeight <= self.heightMax:
-            self.setFixedHeight(newFixedHeight)
+            self.setMinimumHeight(newFixedHeight)
 
 if __name__ == '__main__':
     def demo():

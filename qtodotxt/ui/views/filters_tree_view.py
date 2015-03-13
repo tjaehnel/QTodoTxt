@@ -53,7 +53,6 @@ class FiltersTreeView(QtGui.QWidget):
 
     def _selectItem(self, item):
         if item:
-            item.setSelected(True)
             self._tree.setCurrentItem(item)
 
     def _selectContext(self, context):

@@ -4,12 +4,16 @@ from collections import OrderedDict
 from qtodotxt.lib import settings
 
 class TaskEditorService(object):
+
     def __init__(self, parent_window, settings):
         self._parent_window = parent_window
         self._priorities = ["("+i+")" for i in string.ascii_uppercase ]
         self._resetValues()
+        self._dates = list()
         self._multilineTasks = False
         self._settings = settings
+
+        self._dates.extend(AutoCompleteInputDialog.autocomplete_pairs.keys())
 
     def _resetValues(self):
         self._values = []
@@ -49,8 +53,9 @@ class TaskEditorService(object):
         return text, ok
 
     def _openTaskEditor(self, title, task=None):
-        uniqlist = sorted(list(OrderedDict.fromkeys(self._completedValues+self._values)))
+        uniqlist = sorted(list(OrderedDict.fromkeys(self._completedValues+self._values)))+self._dates
         dialog = AutoCompleteInputDialog(uniqlist, self._parent_window, self._settings.getSupportMultilineTasks())
+        
         dialog.setWindowTitle(title)
         dialog.setLabelText('Task:')
         

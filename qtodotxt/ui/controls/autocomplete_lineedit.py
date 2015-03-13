@@ -1,10 +1,10 @@
 from PySide import QtCore, QtGui
 
-
 class AutoCompleteEdit(QtGui.QLineEdit):
-    def __init__(self, model, separator=' '):
+    def __init__(self, model, autocomplete_pairs, separator=' '):
         super(AutoCompleteEdit, self).__init__()
         self._separator = separator
+        self._autocomplete_pairs = autocomplete_pairs
         self._completer = QtGui.QCompleter(model)
         self._completer.setWidget(self)
         self._completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
@@ -26,11 +26,19 @@ class AutoCompleteEdit(QtGui.QLineEdit):
         completionPrefixSize = len(self._completer.completionPrefix())
         textFirstPart = self.cursorPosition() - completionPrefixSize
         textLastPart = textFirstPart + completionPrefixSize
+
+        if completion in self._autocomplete_pairs:
+            completion = self.replaceAutocompleteKeys(completion)
+
         newtext = currentText[:textFirstPart] + completion + " " + currentText[textLastPart:]
         newCursorPos = self.cursorPosition() + (len(completion) - completionPrefixSize) + 1
         
         self.setText(newtext)
         self.setCursorPosition(newCursorPos)
+
+    def replaceAutocompleteKeys(self, completion):
+        if completion in self._autocomplete_pairs.keys():
+            return self._autocomplete_pairs[completion]
 
     def textUnderCursor(self):
         text = self.text()

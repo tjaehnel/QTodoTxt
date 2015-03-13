@@ -3,9 +3,10 @@ from PySide.QtGui import QFontMetrics, QSizePolicy
 
 
 class AutoCompleteMultilineEdit(QtGui.QPlainTextEdit):
-    def __init__(self, model, separator=' \n'):
+    def __init__(self, model, autocomplete_pairs, separator=' \n'):
         super(AutoCompleteMultilineEdit, self).__init__()
         self._separator = separator
+        self._autocomplete_pairs = autocomplete_pairs
         self._completer = QtGui.QCompleter(model)
         self._completer.setWidget(self)
         self._completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
@@ -45,6 +46,10 @@ class AutoCompleteMultilineEdit(QtGui.QPlainTextEdit):
         completionPrefixSize = len(self._completer.completionPrefix())
         textFirstPart = self.textCursor().position() - completionPrefixSize
         textLastPart = textFirstPart + completionPrefixSize
+        
+        if completion in self._autocomplete_pairs:
+            completion = self.replaceAutocompleteKeys(completion)
+
         newtext = currentText[:textFirstPart] + completion + " " + currentText[textLastPart:]
         newCursorPos = self.textCursor().position() + (len(completion) - completionPrefixSize) + 1
         
@@ -53,6 +58,10 @@ class AutoCompleteMultilineEdit(QtGui.QPlainTextEdit):
         currentCursor = self.textCursor()
         currentCursor.setPosition(newCursorPos)
         self.setTextCursor(currentCursor)
+
+    def replaceAutocompleteKeys(self, completion):
+        if completion in self._autocomplete_pairs.keys():
+            return self._autocomplete_pairs[completion]
 
     def textUnderCursor(self):
         text = self.toPlainText()

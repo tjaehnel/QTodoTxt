@@ -69,7 +69,6 @@ class MainController(QtCore.QObject):
         self._updateSupportMultilineTasksPref()
         self._updateView()
 
-        filename = None
         if self._args.file:
             filename = self._args.file[0]
         else:

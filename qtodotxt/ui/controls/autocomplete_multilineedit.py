@@ -14,7 +14,7 @@ class AutoCompleteMultilineEdit(QtGui.QPlainTextEdit):
         fm = QFontMetrics(self.font())
         textHeight = fm.height() + 5
         self.setFixedHeight(textHeight)
-        self.heightMin = 0
+        self.heightMin = 5
         self.heightMax = 20
         self.document().contentsChanged.connect(self.sizeChange)
         self.connect(
@@ -91,11 +91,12 @@ class AutoCompleteMultilineEdit(QtGui.QPlainTextEdit):
 
     def sizeChange(self):
         fm = QFontMetrics(self.font())
-        #        textHeight = fm.height() + 5
         textHeight = fm.height()
         docHeight = self.document().size().height()
+        if docHeight < self.heightMin:
+            docHeight = self.heightMin
         newFixedHeight = textHeight*docHeight + 10
-        if newFixedHeight > self.height() and self.heightMin <= docHeight <= self.heightMax:
+        if newFixedHeight > self.height() and docHeight <= self.heightMax:
             self.setFixedHeight(newFixedHeight)
 
 if __name__ == '__main__':

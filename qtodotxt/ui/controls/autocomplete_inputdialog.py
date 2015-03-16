@@ -23,7 +23,15 @@ class AutoCompleteInputDialog(QtGui.QDialog):
         ('due:September', ''),
         ('due:October', ''),
         ('due:November', ''),
-        ('due:December', '')
+        ('due:December', ''),
+        ('due:Monday', ''),
+        ('due:Tuesday', ''),
+        ('due:Wednesday', ''),
+        ('due:Thursday', ''),
+        ('due:Friday', ''),
+        ('due:Saturday', ''),
+        ('due:Sunday', ''),
+
     ])
 
     def __init__(self, values, parent=None, multilineTasks=False):
@@ -39,6 +47,15 @@ class AutoCompleteInputDialog(QtGui.QDialog):
         if eom < date.today():
             eom = eom.replace(year=eom.year+1)
         return 'due:'+ eom.strftime('%Y-%m-%d')
+
+    def _dayOfWeek(self, dow):
+        thisDow = date.today().isoweekday()
+        addDays = (dow + 7 - thisDow) % 7
+        if addDays == 0:
+            addDays = 7;
+        
+        newDate = date.today() + timedelta(days=addDays)
+        return 'due:'+ newDate.strftime('%Y-%m-%d')
 
     def _populateKeys(self, keys):
         today = 'due:' + date.today().strftime('%Y-%m-%d')
@@ -64,6 +81,13 @@ class AutoCompleteInputDialog(QtGui.QDialog):
         keys['due:October'] = self._endOfMonth(10)
         keys['due:November'] = self._endOfMonth(11)
         keys['due:December'] = self._endOfMonth(12)
+        keys['due:Monday'] = self._dayOfWeek(1)
+        keys['due:Tuesday'] = self._dayOfWeek(2)
+        keys['due:Wednesday'] = self._dayOfWeek(3)
+        keys['due:Thursday'] = self._dayOfWeek(4)
+        keys['due:Friday'] = self._dayOfWeek(5)
+        keys['due:Saturday'] = self._dayOfWeek(6)
+        keys['due:Sunday'] = self._dayOfWeek(7)
         return keys
 
     def _initUI(self, values):
